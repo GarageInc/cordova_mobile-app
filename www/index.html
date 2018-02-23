@@ -1,0 +1,470 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Workes'Comp Calculators &beta;</title>
+
+    <style type="text/css" media="screen">@import "jqtouch/jqtouch.css";</style>
+    <style type="text/css" media="screen">@import "themes/jqt/theme.css";</style>
+    <script src="jqtouch/jquery-1.4.2.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="phonegap-1.1.0.js" type="text/javascript" charset="utf-8"></script>
+    <script src="scripts/calculator.js" type="text/javascript" charset="utf-8"></script>
+    <script src="jqtouch/jqtouch.js" type="application/x-javascript" charset="utf-8"></script>
+
+    <link rel="stylesheet" href="themes/jqt/sencha-touch.css" type="text/css">
+    <script type="text/javascript" src="js/sencha/sencha-touch-test.js"></script>
+
+    <script type="text/javascript" charset="utf-8">
+
+        var callingControl = null;
+        var datePicker = new Ext.DatePicker({
+            yearFrom: 1900,
+            yearTo: 2050,
+            value: new Date(),
+            listeners:{
+                "change":function(datePicker){
+                    console.log();
+                    if (callingControl != null)
+                    {
+                        document.getElementById(callingControl.id).value = Ext.util.Format.date(datePicker.getValue(), 'm/d/Y');
+                        document.getElementById(callingControl.id).blur();
+                    }
+                },
+                "show": function(datepicker){
+                    if (callingControl != null){
+                      var domEl = document.getElementById(callingControl.id);
+                      console.log(domEl.value)
+                      if(domEl.value && domEl.value != ""){
+                          datepicker.setValue(new Date(domEl.value));
+                      } else {
+                          datepicker.setValue(new Date());
+                      }
+                    }
+
+                },
+                "hide": function(){
+                    callingControl = null;
+                    return;
+                }
+            }
+        });
+
+        function date_picker(control)
+        {
+            callingControl = control;
+            datePicker.show();
+            document.getElementById(callingControl.id).blur();
+        }
+
+        var jQT = new $.jQTouch({
+            icon: 'images/jqtouch.png',
+            icon4: 'images/jqtouch4.png',
+            addGlossToIcon: false,
+            startupScreen: 'images/jqt_startup.png',
+            statusBar: 'black',
+            preloadImages: [
+                'themes/jqt/img/activeButton.png',
+                'themes/jqt/img/back_button.png',
+                'themes/jqt/img/back_button_clicked.png',
+                'themes/jqt/img/blueButton.png',
+                'themes/jqt/img/button.png',
+                'themes/jqt/img/button_clicked.png',
+                'themes/jqt/img/grayButton.png',
+                'themes/jqt/img/greenButton.png',
+                'themes/jqt/img/redButton.png',
+                'themes/jqt/img/whiteButton.png',
+                'themes/jqt/img/loading.gif'
+            ]
+        });
+        // Some sample Javascript functions:
+        $(function(){
+            // Show a swipe event on swipe test
+            $('#swipeme').swipe(function(evt, data) {
+                $(this).html('You swiped <strong>' + data.direction + '/' + data.deltaX +':' + data.deltaY + '</strong>!');
+                $(this).parent().after('<li>swiped!</li>')
+
+            });
+            $('#tapme').tap(function(){
+                $(this).parent().after('<li>tapped!</li>')
+            })
+            $('a[target="_blank"]').click(function() {
+                if (confirm('This link opens in a new window.')) {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+            // Page animation callback events
+            $('#pageevents').
+            bind('pageAnimationStart', function(e, info){
+                $(this).find('.info').append('Started animating ' + info.direction + '&hellip; ');
+            }).
+            bind('pageAnimationEnd', function(e, info){
+                $(this).find('.info').append(' finished animating ' + info.direction + '.<br /><br />');
+            });
+            // Page animations end with AJAX callback event, example 1 (load remote HTML only first time)
+            $('#callback').bind('pageAnimationEnd', function(e, info){
+                // Make sure the data hasn't already been loaded (we'll set 'loaded' to true a couple lines further down)
+                if (!$(this).data('loaded')) {
+                    // Append a placeholder in case the remote HTML takes its sweet time making it back
+                    // Then, overwrite the "Loading" placeholder text with the remote HTML
+                    $(this).append($('<div>Loading</div>').load('ajax.html .info', function() {
+                        // Set the 'loaded' var to true so we know not to reload
+                        // the HTML next time the #callback div animation ends
+                        $(this).parent().data('loaded', true);
+                    }));
+                }
+            });
+            // Orientation callback event
+            $('#jqt').bind('turn', function(e, data){
+                $('#orient').html('Orientation: ' + data.orientation);
+            });
+            $('#play_movie').bind('tap', function(){
+                $('#movie').get(0).play();
+                $(this).removeClass('active');
+            });
+
+            $('#video').bind('pageAnimationStart', function(e, info){
+                $('#movie').css('display', 'none');
+            }).bind('pageAnimationEnd', function(e, info){
+                if (info.direction == 'in')
+                {
+                    $('#movie').css('display', 'block');
+                }
+            })
+        });
+
+    </script>
+
+
+    <style type="text/css" media="screen">
+        #jqt.fullscreen #home .info {
+            display: none;
+        }
+        div#jqt #about {
+            padding: 100px 10px 40px;
+            text-shadow: rgba(255, 255, 255, 0.3) 0px -1px 0;
+            font-size: 13px;
+            text-align: center;
+            background: #161618;
+        }
+        div#jqt #about p {
+            margin-bottom: 8px;
+        }
+        div#jqt #about a {
+            color: #fff;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        #tracker-table { border-collapse: collapse; width:100%}
+        #tracker-table, #tracker-table th, #tracker-table td { padding: 8px 16px; text-align: center; border: 0px solid #B9BABE; }
+        #tracker-table th { font-weight: bold; font-size: 14px; color: white; }
+        #tracker-table td { color: white; font-size: 12px; text-align: center}
+        #tracker-table tr:nth-child(2n) { background: black; }
+
+        #table_head { border-collapse: collapse; width: 100% }
+        #table_head, #table_head th, #table_head td { padding: 8px 16px; text-align: center; border: 0px solid #B9BABE; }
+        #table_head th { font-weight: bold; font-size: 14px; color: white; }
+        #table_head td { font-weight: bold; font-size: 14px; color: white; text-align: center}
+
+    </style>
+</head>
+<body>
+<div id="jqt">
+    <div id="about" class="selectable">
+        <p><strong>Workers' Compensation</strong><br />Litigation Calculator<br />
+        <p><strong>Sponsored By</strong><br />
+        <p><a href="http://www.moelaw.com" target="_blank"><img src="images/moebesLawBlackLogo.png" width="120px" height="90px"/></a></p>
+        <p><strong>The Compulator</strong><br />Version 1.0<br />
+            <a href="http://www.keysysconsulting.com" target="_blank">By KeySys Consulting</a></p>
+        <p><br /><br /><a href="#" class="grayButton goback">Close</a></p>
+    </div>
+
+    <div id="formNumberOfWeeksByDate">
+        <div class="toolbar">
+            <h4 align="center">Number of Weeks</h4>
+            <a href="#" class="back">Back</a>
+        </div>
+        <form action="echo.pl" method="GET" >
+            <ul class="edit rounded">
+                <li>Start Date:<input type="text" name="name" placeholder="Tap to select date" id="startDate" onFocus="date_picker(this)"  readonly="true"/></li>
+                <li>End Date:<input type="text" name="search" placeholder="Tap to select date" id="endDate" onFocus="date_picker(this)" disable="disabled" readonly="true"/></li>
+                <li><input class=" x-button x-button-action" type="button" value="Submit" onclick="calculateNoOfWeeksByDate()"></li>
+            </ul>
+        </form>
+    </div>
+
+    <div id="formNumberOfWeeksByWeek">
+        <div class="toolbar">
+            <h4 align="center">Number of Weeks</h4>
+            <a href="#" class="back">Back</a>
+        </div>
+        <form action="echo.pl" method="GET" >
+            <ul class="edit rounded">
+                <li>Start Date:<input type="text" name="startDate" placeholder="Tap to select date" id="weeklyStartDate"  onFocus="date_picker(this)" disable="disabled" readonly="true"/></li>
+                <li>Number of Weeks:<input type="number" name="weeks" placeholder="Tap to enter Number of Weeks" id="weeks"  /></li>
+                <!--<li>End Date:<input type="text" placeholder="Answer" disable="disabled" id="endDateBox" onFocus="this.blur();"></li>-->
+                <li><input id="weeksSubmit" class=" x-button x-button-action" type="button" value="Submit" onclick="calculateNoOfWeeksByWeeks()"></li>
+            </ul>
+        </form>
+    </div>
+
+    <div id="formPresentValue">
+        <div class="toolbar">
+            <h4 align="center">Present Value</h4>
+            <a href="#" class="back">Back</a>
+        </div>
+        <form action="echo.pl" method="GET" >
+            <ul class="edit rounded">
+                <li>Weekly Payments ($):<input type="number" name="weeklyPayments" placeholder="Tap to enter Weekly Payments" id="weeklyPayments" /></li>
+                <li>Number of Weeks:<input type="number" name="weeks" placeholder="Tap to enter Number of Weeks" id="wowz" /></li>
+                <li>Interest Rate (%):<input type="number" name="interestRate" placeholder="Tap to enter Interest Rate" id="interestRate" /></li>
+                <!--<li>Sum of Payments:<input type="text" placeholder="Answer" disable="disabled" id="sum" onFocus="this.blur();"></li>
+                 <li>Present Value:<input type="text" placeholder="Answer" disable="disabled" id="pValue" onFocus="this.blur();"></li>-->
+                <li><input class=" x-button x-button-action" type="button" value="Submit" onclick="calculatePresentValue()"></li>
+
+            </ul>
+        </form>
+    </div>
+    <div id="formLifeExpectancy">
+        <div class="toolbar">
+            <h4 align="center">Life Expectancy</h4>
+            <a href="#" class="back">Back</a>
+        </div>
+        <form action="echo.pl" method="GET" onsubmit="calculateLifeExpectancy()">
+            <ul class="edit rounded">
+                <li>Birth Date:<input type="text" name="name" placeholder="Tap to select date" id="birthDate" onFocus="date_picker(this)" disable="disabled" readonly="true"/></li>
+                <li>Gender
+                    <select id="gender">
+                        <option id="select" disable="disabled" value="selectGender">&nbsp;Select Gender </option>
+                        <option id="male" value="Male">&nbsp;Male</option>
+                        <option id="female" value="Female">&nbsp;Female</option>
+                    </select>
+                </li>
+                <!--<li>CDC Life Expectancy at current age:<input type="text" placeholder="Answer" disable="disabled" id="lifeExAnswer" onFocus="this.blur();"></li>-->
+                <!--<li>AMT Life Expectancy at current age:<input type="text" placeholder="Answer" disable="disabled" id="amtlifeExAnswer" onFocus="this.blur();"></li>-->
+                <li><input class=" x-button x-button-action" type="button" value="Submit" onclick="calculateLifeExpectancy()"></li>
+            </ul>
+        </form>
+    </div>
+
+    <div id="formSettlementWorksheet">
+        <div class="toolbar">
+            <h4 align="center">Settlement Worksheet</h4>
+            <a href="#" class="back">Back</a>
+        </div>
+        <form action="echo.pl" method="GET" onsubmit="calculateSettlement()">
+            <ul class="edit rounded">
+                <li>Gross Amount ($):<input type="number" name="grossAmount" placeholder="Tap to enter Gross Amount" id="grossAmount" /></li>
+                <li>Attorney's Fees (%):<input type="number" name="attFees" placeholder="Tap to enter Attorney's Fees" id="attFees" /></li>
+                <li>Net after Attorney's Fees ($):<input type="number" name="netAmount" placeholder="Tap to enter Net Amount" id="netAmount" /></li>
+                <li>Expenses ($):<input type="number" name="expenses" placeholder="Tap to enter Expenses" id="expenses" /></li>
+                <li><input class="x-button x-button-action" type="button" value="Submit" onclick="calculateSettlement()"></li>
+            </ul>
+        </form>
+    </div>
+
+    <div id="formMediationTracker">
+        <div class="toolbar">
+            <h4 align="center">Mediation Tracker</h4>
+            <a href="#" class="back">Back</a>
+        </div>
+        <form id="tracker-form" name="tracker-form" action="echo.pl" method="GET" onsubmit="calculateTracker()">
+            <ul class="edit rounded">
+                <li>Demand Amount ($):<input type="number" name="demand" placeholder="Tap to enter Demand Amount" id="demand" /></li>
+                <li>Offer Amount ($):<input type="number" name="offer" placeholder="Tap to enter Offer" id="offer" /></li>
+                <input id="midpoint" name="midpoint" type="hidden">
+                <li><input id="tracker-op-save" class="x-button x-button-action" type="submit" value="Submit"></li>
+                <input name="id_entry" value="0" type="hidden">
+                <li class="arrow"><a href="#trackerResultWindow">View Tracker Report</a> </li>
+            </ul>
+        </form>
+    </div>
+
+    <div id="trackerResultWindow">
+        <div class="toolbar">
+            <h4 align="center">Tracker Report</h4>
+            <a href="#" class="back">Back</a>
+        </div>
+        <div>
+            <table id="table_head">
+                <tbody>
+                <tr>
+                    <td>ID</td>
+                    <td>Demand</td>
+                    <td>Offer</td>
+                    <td>Midpoint</td>
+                </tr>
+                </tbody>
+            </table>
+            <table id="tracker-table">
+                <tbody id="tbody">
+                <tr id="tracker-head"></tr>
+                </tbody>
+            </table>
+            </br>
+            <input class=" x-button x-button-action" type="button" value="Clear Data" onclick="clearTrackerData()">
+        </div>
+    </div>
+
+    <div id="home" class="current">
+        <div class="toolbar">
+            <h4 align="center" >The Compulator</h4>
+            <a class="button slideup" id="infoButton" href="#about">About</a>
+        </div>
+        <ul class="rounded">
+            <li class="arrow"><a href="#weeksWindow">Date Calculator</a> </li>
+            <li class="arrow"><a href="#formPresentValue">Present Value</a></li>
+            <li class="arrow"><a href="#formLifeExpectancy">Life Expectancy</a></li>
+            <li class="arrow"><a href="#formSettlementWorksheet">Settlement Worksheet</a></li>
+            <li class="arrow"><a href="#formMediationTracker">Mediation Tracker</a></li>
+        </ul>
+        <a href="#"></a>
+    </div>
+
+    <div id="weeksWindow" class="current">
+        <div class="toolbar">
+            <h4 align="center">Date Calculator</h4>
+            <a href="#" class="back">Back</a>
+        </div>
+        <ul class="rounded">
+            <li class="arrow"><a href="#formNumberOfWeeksByDate">Start Date / End Date</a> </li>
+            <li class="arrow"><a href="#formNumberOfWeeksByWeek">Start Date / No. of Weeks</a></li>
+        </ul>
+    </div>
+</div>
+
+
+<script>
+    // store tracker data
+    var tracker = {
+        index: window.localStorage.getItem("tracker:index"),
+        $table: document.getElementById("tracker-table"),
+        $form: document.getElementById("tracker-form"),
+        $button_save: document.getElementById("tracker-op-save"),
+        $button_discard: document.getElementById("tracker-op-discard"),
+
+        init: function() {
+            // initialize storage index
+            if (!tracker.index) {
+                window.localStorage.setItem("tracker:index", tracker.index = 1);
+            }
+
+            // initialize form
+            tracker.$form.reset();
+            /*tracker.$button_discard.addEventListener("click", function(event) {
+             tracker.$form.reset();
+             tracker.$form.id_entry.value = 0;
+             }, true);*/
+
+            tracker.$form.addEventListener("submit", function(event) {
+                var entry = {
+                    id: parseInt(this.id_entry.value),
+                    demand: this.demand.value,
+                    offer: this.offer.value,
+                    midpoint: this.midpoint.value
+                };
+                if (entry.id == 0) { // add
+                    tracker.storeAdd(entry);
+                    tracker.tableAdd(entry);
+                }
+                else { // edit
+                    tracker.storeEdit(entry);
+                    tracker.tableEdit(entry);
+                }
+
+                this.reset();
+                this.id_entry.value = 0;
+                event.preventDefault();
+            }, true);
+
+            // initialize table
+            if (window.localStorage.length - 1) {
+                var tracker_list = [], i, key;
+                for (i = 0; i < window.localStorage.length; i++) {
+                    key = window.localStorage.key(i);
+                    if (/tracker:\d+/.test(key)) {
+                        tracker_list.push(JSON.parse(window.localStorage.getItem(key)));
+                    }
+                }
+
+                if (tracker_list.length) {
+                    tracker_list
+                        .sort(function(a, b) {
+                            return a.id < b.id ? -1 : (a.id > b.id ? 1 : 0);
+                        })
+                        .forEach(tracker.tableAdd);
+                }
+            }
+            tracker.$table.addEventListener("click", function(event) {
+                var op = event.target.getAttribute("data-op");
+                if (/edit|remove/.test(op)) {
+                    var entry = JSON.parse(window.localStorage.getItem("tracker:"+ event.target.getAttribute("data-id")));
+                    if (op == "edit") {
+                        tracker.$form.demand.value = entry.demand;
+                        tracker.$form.offer.value = entry.offer;
+                        tracker.$form.midpoint.value = entry.midpoint;
+                        tracker.$form.id_entry.value = entry.id;
+                    }
+                    else if (op == "remove") {
+                        if (confirm('Are you sure you want to remove "'+ entry.demand +' '+ entry.offer +'" from your tracker?')) {
+                            tracker.storeRemove(entry);
+                            tracker.tableRemove(entry);
+                        }
+                    }
+                    event.preventDefault();
+                }
+            }, true);
+        },
+
+        storeAdd: function(entry) {
+            entry.id = tracker.index;
+            window.localStorage.setItem("tracker:index", ++tracker.index);
+            window.localStorage.setItem("tracker:"+ entry.id, JSON.stringify(entry));
+        },
+        storeEdit: function(entry) {
+            window.localStorage.setItem("tracker:"+ entry.id, JSON.stringify(entry));
+        },
+        storeRemove: function(entry) {
+            window.localStorage.removeItem("tracker:"+ entry.id);
+            //window.localStorage.clear();
+        },
+
+        tableAdd: function(entry) {
+            var $tr = document.createElement("tr"), $td, key;
+            for (key in entry) {
+                if (entry.hasOwnProperty(key)) {
+                    $td = document.createElement("td");
+                    $td.appendChild(document.createTextNode(entry[key]));
+                    $tr.appendChild($td);
+                }
+            }
+            //$td = document.createElement("td");
+            //$td.innerHTML = '<a data-op="edit" data-id="'+ entry.id +'">Edit</a> | <a data-op="remove" data-id="'+ entry.id +'">Remove</a>';
+            $tr.appendChild($td);
+            $tr.setAttribute("id", "entry-"+ entry.id);
+            tracker.$table.appendChild($tr);
+        },
+        tableEdit: function(entry) {
+            var $tr = document.getElementById("entry-"+ entry.id), $td, key;
+            $tr.innerHTML = "";
+            for (key in entry) {
+                if (entry.hasOwnProperty(key)) {
+                    $td = document.createElement("td");
+                    $td.appendChild(document.createTextNode(entry[key]));
+                    $tr.appendChild($td);
+                }
+            }
+            //$td = document.createElement("td");
+            //$td.innerHTML = '<a data-op="edit" data-id="'+ entry.id +'">Edit</a> | <a data-op="remove" data-id="'+ entry.id +'">Remove</a>';
+            $tr.appendChild($td);
+        },
+        tableRemove: function(entry) {
+            tracker.$table.removeChild(document.getElementById("entry-"+ entry.id));
+        }
+    };
+    tracker.init();
+
+</script>
+</body>
+</html>

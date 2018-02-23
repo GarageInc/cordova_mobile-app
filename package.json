@@ -1,0 +1,13 @@
+{
+  "name": "compulator",
+  "version": "2.0.0",
+  "description": "Mobile app",
+  "main": "index.html",
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
